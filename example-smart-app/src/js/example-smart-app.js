@@ -58,7 +58,7 @@
           }
 
           p.hdl = getQuantityValueAndUnit(hdl[0]);
-          p.ldl = getQuantityValueAndUnit(lEl[0]);
+          p.ldl = getQuantityValueAndUnit(ldl[0]);
 
           ret.resolve(p);
         });
