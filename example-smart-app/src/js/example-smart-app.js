@@ -60,7 +60,8 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
-          p.jsondump = getBPjson(byCodes('55284-4'));
+          //p.jsondump = getBPjson(byCodes('55284-4'));
+          p.jsondump = 'Number of BP Observations = ' + byCodes('55284-4').length;
 
           ret.resolve(p);
         });
