@@ -60,6 +60,8 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
+          p.jsondump = 'test value text!!';
+
           ret.resolve(p);
         });
       } else {
@@ -83,7 +85,7 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
-      jsondump: {value: 'test'},
+      jsondump: {value: ''},
     };
   }
 
