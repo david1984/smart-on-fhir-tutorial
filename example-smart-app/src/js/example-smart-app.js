@@ -83,6 +83,7 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+      jsondump: {value: 'test'},
     };
   }
 
@@ -126,6 +127,7 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+    $('#jsondump').html(p.jsondump);
   };
 
 })(window);
