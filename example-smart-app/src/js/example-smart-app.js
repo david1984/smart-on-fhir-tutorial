@@ -60,7 +60,7 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
-          p.jsondump = 'test value text!!';
+          p.jsondump = getBPjson(byCodes('55284-4'));
 
           ret.resolve(p);
         });
@@ -115,6 +115,14 @@
     } else {
       return undefined;
     }
+  }
+
+  function getBPjson(BPObservations) {
+    var tmp = BPObservations[0] instanceof Error ?
+        String(BPObservations[0]) :
+        JSON.stringify(BPObservations[0], null, 4);
+
+    return tmp;
   }
 
   window.drawVisualization = function(p) {
