@@ -125,15 +125,15 @@
       //grab the systolic BP if it exists in this BP observation
       var sysBP = observation.component.find(function(component){
         return component.code.coding.find(function(coding) {
+          console.log('128');
           return coding.code == '8480-6';
-          console.log('129');
         });
       });
       //grab the diastolic BP if it exists in this BP observation
       var diaBP = observation.component.find(function(component){
         return component.code.coding.find(function(coding) {
+          console.log('135');
           return coding.code == '8462-4';
-          console.log('136');
         });
       });
       //if both systolic and diastolic readings exist in this observation, create a valid BP entry
