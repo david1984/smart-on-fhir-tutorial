@@ -60,8 +60,8 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
-          //p.jsondump = getBPjson(byCodes('55284-4'));
-          p.jsondump = 'Number of BP Observations = ' + byCodes('55284-4').length;
+          p.jsondump = getBPvalues(byCodes('55284-4'));
+          //p.jsondump = 'Number of BP Observations = ' + byCodes('55284-4').length;
 
           ret.resolve(p);
         });
@@ -118,12 +118,40 @@
     }
   }
 
-  function getBPjson(BPObservations) {
-    var tmp = BPObservations[0] instanceof Error ?
+  function getBPvalues(BPObservations) {
+    var formattedBPValues = [];
+    BPObservations.forEach(function(observation){
+      //grab the systolic BP if it exists in this BP observation
+      var sysBP = observation.component.find(function(component){
+        return component.code.coding.find(function(coding) {
+          return coding.code == '8480-6';
+        });
+      });
+      //grab the diastolic BP if it exists in this BP observation
+      var diaBP = observation.component.find(function(component){
+        return component.code.coding.find(function(coding) {
+          return coding.code == '8462-4';
+        });
+      });
+      //if both systolic and diastolic readings exist in this observation, create a valid BP entry
+      if (sysBP && diaBP) {
+        observation.valueQuantity = BP.valueQuantity;
+        formattedBPValues.push(getQuantityValueAndUnit(sysBP) + ' / ' + getQuantityValueAndUnit(diaBP));
+      }
+    });
+    
+    var outputString = '';
+    formattedBPValues.forEach(function(item){
+      outputString = outputString + item + '<br>';
+    });
+
+    return outputString;
+
+        /* var tmp = BPObservations[0] instanceof Error ?
         String(BPObservations[0]) :
         JSON.stringify(BPObservations[0], null, 4);
 
-    return tmp;
+    return tmp; */
   }
 
   window.drawVisualization = function(p) {
