@@ -138,7 +138,6 @@
       });
       //if both systolic and diastolic readings exist in this observation, create a valid BP entry
       if (sysBP && diaBP) {
-        observation.valueQuantity = BP.valueQuantity;
         formattedBPValues.push(getQuantityValueAndUnit(sysBP) + ' / ' + getQuantityValueAndUnit(diaBP));
         console.log('143');
       }
