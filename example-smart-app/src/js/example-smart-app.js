@@ -120,29 +120,34 @@
 
   function getBPvalues(BPObservations) {
     var formattedBPValues = [];
+    console.log('123');
     BPObservations.forEach(function(observation){
       //grab the systolic BP if it exists in this BP observation
       var sysBP = observation.component.find(function(component){
         return component.code.coding.find(function(coding) {
           return coding.code == '8480-6';
+          console.log('129');
         });
       });
       //grab the diastolic BP if it exists in this BP observation
       var diaBP = observation.component.find(function(component){
         return component.code.coding.find(function(coding) {
           return coding.code == '8462-4';
+          console.log('136');
         });
       });
       //if both systolic and diastolic readings exist in this observation, create a valid BP entry
       if (sysBP && diaBP) {
         observation.valueQuantity = BP.valueQuantity;
         formattedBPValues.push(getQuantityValueAndUnit(sysBP) + ' / ' + getQuantityValueAndUnit(diaBP));
+        console.log('143');
       }
     });
     
     var outputString = '';
     formattedBPValues.forEach(function(item){
       outputString = outputString + item + '<br>';
+      console.log('150');
     });
 
     return outputString;
