@@ -124,7 +124,13 @@
     if (typeof ob != 'undefined'){
       //i think only one of the following should be defined in any given observation
       if ("effectiveDateTime" in ob){
-        return ob.effectiveDateTime;
+        if (ob.effectiveDateTime.indexOf('T') == -1){
+          //this DateTime is just a date, no time
+          return ob.effectiveDateTime;
+        } else {
+          //this DateTime includes a time, which we will discard
+          return ob.effectiveDateTime.slice(0, ob.effectiveDateTime.indexOf('T'));
+        }
       } else if ("effectivePeriod" in ob){
         return ob.effectivePeriod;
       } else if ("effectiveTiming" in ob){
