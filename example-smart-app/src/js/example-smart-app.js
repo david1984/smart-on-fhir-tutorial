@@ -118,6 +118,28 @@
     }
   }
 
+  // ****** MY FUNCTION *******
+  // N.B.: extracting the 'effective[x]' field, where [x] = DateTime, Period, Timing or Instant types
+  function getDate(ob) {
+    if (typeof ob != 'undefined'){
+      //i think only one of the following should be defined in any given observation
+      if ("effectiveDateTime" in ob){
+        return ob.effectiveDateTime;
+      } else if ("effectivePeriod" in ob){
+        return ob.effectivePeriod;
+      } else if ("effectiveTiming" in ob){
+        return ob.effectiveTiming
+      } else if ("effectiveInstant" in ob){
+        return ob.effectiveInstant;
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  }
+
+  // ***** MY FUNCTION *****
   function getBPvalues(BPObservations) {
     var formattedBPValues = [];
     console.log('123');
@@ -138,7 +160,8 @@
       });
       //if both systolic and diastolic readings exist in this observation, create a valid BP entry
       if (sysBP && diaBP) {
-        formattedBPValues.push(getQuantityValueAndUnit(sysBP) + ' / ' + getQuantityValueAndUnit(diaBP));
+        //create an array entry for each reading, and add the date/time
+        formattedBPValues.push(getQuantityValueAndUnit(sysBP) + ' / ' + getQuantityValueAndUnit(diaBP) + ' on ' + getDate(observation));
         console.log('143');
       }
     });
@@ -151,7 +174,8 @@
 
     return outputString;
 
-        /* var tmp = BPObservations[0] instanceof Error ?
+    // for dumping JSON string
+    /* var tmp = BPObservations[0] instanceof Error ?
         String(BPObservations[0]) :
         JSON.stringify(BPObservations[0], null, 4);
 
