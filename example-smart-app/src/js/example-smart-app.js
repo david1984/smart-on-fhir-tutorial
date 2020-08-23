@@ -118,25 +118,46 @@
     }
   }
 
-  // ****** MY FUNCTION *******
-  // N.B.: extracting the 'effective[x]' field, where [x] = DateTime, Period, Timing or Instant types
-  function getDate(ob) {
-    if (typeof ob != 'undefined'){
+  // ********************************************************************************************
+  // Function:  getDateFromDateTime(dt)
+  // Input:     dt -> a FHIR DateTime type
+  // Purpose:   returns the Date portion of a DateTime type.  Date is mandatory, but the time
+  //            portion is optional and is specified by a 'T' followed by the time.  An example
+  //            FHIR DateTime is:  2015-02-07T13:28:17-05:00
+  // ********************************************************************************************
+  function getDateFromDateTime(dt) {
+    if (dt.indexOf('T') == -1){
+      //this DateTime is already just a Date, no Time
+      return dt;
+    } else {
+      //this DateTime includes a time, which we will discard
+      return dt.slice(0, dt.indexOf('T'));
+    }
+  }
+
+  // ********************************************************************************************
+  // Function:  getDate(obs)
+  // Input:     obs -> a FHIR Observation resource object
+  // Purpose:   returns the Date portion of the effectiveDateTime key.  N.b. for Observation
+  //            resources, the effective date/time key can be 1 of 4 options: 'effective[x]' key,
+  //            where [x] = DateTime, Period, Timing or Instant types.
+  // ********************************************************************************************
+  function getDate(obs) {
+    if (typeof obs != 'undefined'){
       //i think only one of the following should be defined in any given observation
-      if ("effectiveDateTime" in ob){
-        if (ob.effectiveDateTime.indexOf('T') == -1){
-          //this DateTime is just a date, no time
-          return ob.effectiveDateTime;
-        } else {
-          //this DateTime includes a time, which we will discard
-          return ob.effectiveDateTime.slice(0, ob.effectiveDateTime.indexOf('T'));
-        }
-      } else if ("effectivePeriod" in ob){
-        return ob.effectivePeriod;
-      } else if ("effectiveTiming" in ob){
-        return ob.effectiveTiming
-      } else if ("effectiveInstant" in ob){
-        return ob.effectiveInstant;
+      if ("effectiveDateTime" in obs){
+        return getDateFromDateTime(obs.effectiveDateTime);
+      } else if ("effectivePeriod" in obs){
+        //a FHIR Period object contains a "start" and "stop" DateTime key
+        return getDateFromDateTime(obs.effectivePeriod.start);
+      } else if ("effectiveTiming" in obs){
+        //a complex FHIR data type that can occur mulitple times
+        //"event" key contains an array of DateTimes when the event occurs
+        return getDateFromDateTime(obs.effectiveTiming.event[0]);
+      } else if ("effectiveInstant" in obs){
+        //an instant is basically a DateTime that is required to have both a date and a time,
+        //specified at least to the seconds place
+        return getDateFromDateTime(obs.effectiveInstant);
       } else {
         return undefined;
       }
@@ -145,7 +166,12 @@
     }
   }
 
-  // ***** MY FUNCTION *****
+  // ********************************************************************************************
+  // Function:  getBPValues(BPObservations)
+  // Input:     BPObservations -> an array of FHIR Observations containing BP readings
+  // Purpose:   extracts the blood pressure values into a human-readable string format and lists
+  //            the date of each reading.  Each value/date is on a new line in the output string.
+  // ********************************************************************************************
   function getBPvalues(BPObservations) {
     var formattedBPValues = [];
     console.log('123');
